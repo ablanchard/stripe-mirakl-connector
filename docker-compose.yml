@@ -2,30 +2,27 @@ version: "3.2"
 services:
   db:
     image: postgres:11.5-alpine
-    ports:
-      - "5432:5432"
+    container_name: stripe_connector_db
     environment:
-      POSTGRES_DB: symfony
+      POSTGRES_DB: stripe_connector2
       POSTGRES_USER: symfony
       POSTGRES_PASSWORD: symfony
+    networks:
+      - stripe_test
   php:
-    build:
-      context: .
-      dockerfile: docker/php-fpm/Dockerfile
-      args:
-        - SKIP_XDEBUG
-    ports:
-      - "9001:9001"
-    volumes:
-      - ./:/var/www:cached
+    image: mirakl/stripe-connector:latest
+    networks:
+      - stripe_test
+    env_file:
+      - .env
   nginx:
-    build:
-      context: .
-      dockerfile: ./docker/nginx/Dockerfile
+    image: nginx-stripe:latest
     ports:
       - "80:80"
       - "443:443"
-    volumes:
-      - ./public:/var/www/public:cached,ro
-      - ./docker/nginx/certs:/etc/letsencrypt:cached,ro
+    networks:
+      - stripe_test
 
+networks:
+  stripe_test:
+    external: true

@@ -1,9 +1,9 @@
 FROM php:7.3-fpm-alpine
 
 # install system basics
-RUN apk add supervisor postgresql-dev --no-cache \
-    && docker-php-ext-install pdo_pgsql opcache \
-    && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+RUN apk add supervisor postgresql-dev --no-cache
+RUN docker-php-ext-install pdo_pgsql opcache ; exit 0
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 ARG SKIP_XDEBUG=false
 RUN if [ "$SKIP_XDEBUG" = "false" ] ; then \
@@ -35,6 +35,8 @@ RUN crontab /etc/crontabs/connector-crontab
 
 WORKDIR /var/www
 
+
+RUN apk add git --no-cache
 # copy the source code
 COPY composer.* ./
 RUN composer install --prefer-dist --no-scripts --no-dev --no-autoloader -q \
