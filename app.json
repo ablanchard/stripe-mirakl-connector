@@ -53,6 +53,10 @@
         "ENABLES_AUTOMATIC_TRANSFER_CREATION": {
           "description": "Flag to enable/disable the automatic transfer process for you. Default is false.",
           "value": "false"
+        },
+        "ORDER_PAYMENT_TYPE": {
+          "description": "Tell which order should create transfer",
+          "value": ""
         }
       },
       "scripts": {

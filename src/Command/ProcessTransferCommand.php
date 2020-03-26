@@ -34,6 +34,11 @@ class ProcessTransferCommand extends Command implements LoggerAwareInterface
     private $enablesAutoTransferCreation;
 
     /**
+     * @var string
+     */
+    private $orderPaymentType;
+
+    /**
      * @var MiraklClient
      */
     private $miraklClient;
@@ -53,10 +58,11 @@ class ProcessTransferCommand extends Command implements LoggerAwareInterface
      */
     private $miraklStripeMappingRepository;
 
-    public function __construct(MessageBusInterface $bus, bool $enablesAutoTransferCreation, MiraklClient $miraklClient, StripeProxy $stripeProxy, StripeTransferRepository $stripeTransferRepository, MiraklStripeMappingRepository $miraklStripeMappingRepository)
+    public function __construct(MessageBusInterface $bus, bool $enablesAutoTransferCreation, string $orderPaymentType, MiraklClient $miraklClient, StripeProxy $stripeProxy, StripeTransferRepository $stripeTransferRepository, MiraklStripeMappingRepository $miraklStripeMappingRepository)
     {
         $this->bus = $bus;
         $this->enablesAutoTransferCreation = $enablesAutoTransferCreation;
+        $this->orderPaymentType = $orderPaymentType;
         $this->miraklClient = $miraklClient;
         $this->stripeProxy = $stripeProxy;
         $this->stripeTransferRepository = $stripeTransferRepository;
@@ -112,6 +118,15 @@ class ProcessTransferCommand extends Command implements LoggerAwareInterface
             if (in_array($miraklOrder['order_id'], $alreadyCreatedMiraklIds)) {
                 continue;
             }
+
+            if($miraklOrder['payment_type'] != $this->orderPaymentType) {
+                $rejectedReason = sprintf('Doing nothing, order payment type is not "%s"', $this->orderPaymentType);
+                $this->logger->info($rejectedReason, [
+                    'miraklOrderId' => $miraklOrder['order_id'],
+                ]);
+                continue;
+            }
+
             $miraklUpdateTime = \DateTime::createFromFormat(MiraklClient::DATE_FORMAT, $miraklOrder['last_updated_date']);
             if (!$miraklUpdateTime) {
                 $this->logger->error('Cannot parse last_updated_date from Mirakl', ['mirakl_order' => $miraklOrder]);
@@ -132,7 +147,7 @@ class ProcessTransferCommand extends Command implements LoggerAwareInterface
             $taxes = 0;
             foreach ($miraklOrder['order_lines'] as $orderLine) {
               if(in_array($orderLine['order_line_state'], $notValidOrderLineStates)) {
-                break;
+                continue;
               }
 
               foreach ((array) $orderLine['shipping_taxes'] as $tax) {
