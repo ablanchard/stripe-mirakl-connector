@@ -2,12 +2,12 @@
 
 namespace App\Factory;
 
-class MiraklPatchShopFactory
+class MiraklPatchStripeUrlShopFactory
 {
     /**
      * @var string
      */
-    private $customFieldCode;
+    private $stripeUrlCustomFieldCode;
 
     /**
      * @var int
@@ -19,9 +19,9 @@ class MiraklPatchShopFactory
      */
     private $stripeUrl;
 
-    public function __construct(string $customFieldCode)
+    public function __construct(string $stripeUrlCustomFieldCode)
     {
-        $this->customFieldCode = $customFieldCode;
+        $this->stripeUrlCustomFieldCode = $stripeUrlCustomFieldCode;
     }
 
     public function setMiraklShopId(int $miraklShopId): self
@@ -44,7 +44,7 @@ class MiraklPatchShopFactory
             'shop_id' => $this->miraklShopId,
             'shop_additional_fields' => [
                 [
-                    'code' => $this->customFieldCode,
+                    'code' => $this->stripeUrlCustomFieldCode,
                     'value' => $this->stripeUrl,
                 ],
             ],

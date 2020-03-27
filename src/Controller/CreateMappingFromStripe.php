@@ -166,6 +166,10 @@ class CreateMappingFromStripe extends AbstractController implements LoggerAwareI
             ->setPayinEnabled($stripeAccount->charges_enabled);
         $this->miraklStripeMappingRepository->persistAndFlush($newMapping);
 
+        // Update S07
+
+        
+
         $queryParams = \http_build_query([
             'success' => 'true',
             'mirakl_shop_id' => $miraklShopId,

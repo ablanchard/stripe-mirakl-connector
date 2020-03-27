@@ -2,7 +2,7 @@
 
 namespace App\Tests\MessageHandler;
 
-use App\Factory\MiraklPatchShopFactory;
+use App\Factory\MiraklPatchStripeUrlShopFactory;
 use App\Handler\UpdateAccountLoginLinkHandler;
 use App\Message\AccountUpdateMessage;
 use App\Utils\MiraklClient;
@@ -24,7 +24,7 @@ class UpdateAccountLoginLinkHandlerTest extends TestCase
     private $stripeProxy;
 
     /**
-     * @var MiraklPatchShopFactory
+     * @var MiraklPatchStripeUrlShopFactory
      */
     private $patchFactory;
 
@@ -37,7 +37,7 @@ class UpdateAccountLoginLinkHandlerTest extends TestCase
     {
         $this->miraklClient = $this->createMock(MiraklClient::class);
         $this->stripeProxy = $this->createMock(StripeProxy::class);
-        $this->patchFactory = $this->getMockBuilder(MiraklPatchShopFactory::class)
+        $this->patchFactory = $this->getMockBuilder(MiraklPatchStripeUrlShopFactory::class)
                          ->setConstructorArgs(['stripe-link'])
                          ->getMock();
 

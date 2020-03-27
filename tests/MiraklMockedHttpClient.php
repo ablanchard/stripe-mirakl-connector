@@ -7,11 +7,11 @@ use Symfony\Component\HttpClient\Response\MockResponse;
 
 class MiraklMockedHttpClient extends MockHttpClient
 {
-    private $customFieldCode;
+    private $stripeUrlCustomFieldCode;
 
-    public function __construct(string $customFieldCode)
+    public function __construct(string $stripeUrlCustomFieldCode)
     {
-        $this->customFieldCode = $customFieldCode;
+        $this->stripeUrlCustomFieldCode = $stripeUrlCustomFieldCode;
 
         $responseFactory = function ($method, $url, $options) {
             switch ($url) {
@@ -96,7 +96,7 @@ class MiraklMockedHttpClient extends MockHttpClient
 
         if ($additionalField) {
             $baseShop['shop_additional_fields'][] = [
-                'code' => $this->customFieldCode,
+                'code' => $this->stripeUrlCustomFieldCode,
                 'value' => $additionalField,
             ];
         }

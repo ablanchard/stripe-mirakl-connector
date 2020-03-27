@@ -2,7 +2,7 @@
 
 namespace App\Handler;
 
-use App\Factory\MiraklPatchShopFactory;
+use App\Factory\MiraklPatchStripeUrlShopFactory;
 use App\Message\AccountUpdateMessage;
 use App\Utils\MiraklClient;
 use App\Utils\StripeProxy;
@@ -26,11 +26,11 @@ class UpdateAccountLoginLinkHandler implements MessageHandlerInterface, MessageS
     private $stripeProxy;
 
     /**
-     * @var MiraklPatchShopFactory
+     * @var MiraklPatchStripeUrlShopFactory
      */
     private $patchFactory;
 
-    public function __construct(MiraklClient $miraklClient, StripeProxy $stripeProxy, MiraklPatchShopFactory $patchFactory)
+    public function __construct(MiraklClient $miraklClient, StripeProxy $stripeProxy, MiraklPatchStripeUrlShopFactory $patchFactory)
     {
         $this->miraklClient = $miraklClient;
         $this->stripeProxy = $stripeProxy;

@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Exception\InvalidArgumentException;
-use App\Factory\MiraklPatchShopFactory;
+use App\Factory\MiraklPatchStripeUrlShopFactory;
 use App\Factory\OnboardingAccountFactory;
 use App\Utils\MiraklClient;
 use Psr\Log\LoggerAwareInterface;
@@ -32,25 +32,25 @@ class AutoGenerateOnboardingLink extends Command implements LoggerAwareInterface
     private $miraklClient;
 
     /**
-     * @var MiraklPatchShopFactory
+     * @var MiraklPatchStripeUrlShopFactory
      */
     private $patchFactory;
 
     /**
      * @var string
      */
-    private $customFieldCode;
+    private $stripeUrlCustomFieldCode;
 
     public function __construct(
         OnboardingAccountFactory $onboardingAccountFactory,
         MiraklClient $miraklClient,
-        MiraklPatchShopFactory $patchFactory,
-        string $customFieldCode
+        MiraklPatchStripeUrlShopFactory $patchFactory,
+        string $stripeUrlCustomFieldCode
     ) {
         $this->onboardingAccountFactory = $onboardingAccountFactory;
         $this->miraklClient = $miraklClient;
         $this->patchFactory = $patchFactory;
-        $this->customFieldCode = $customFieldCode;
+        $this->stripeUrlCustomFieldCode = $stripeUrlCustomFieldCode;
 
         parent::__construct();
     }
@@ -96,7 +96,7 @@ class AutoGenerateOnboardingLink extends Command implements LoggerAwareInterface
     private function getStripeCustomFieldValue(array $additionalFields): ?string
     {
         foreach ($additionalFields as $field) {
-            if ($field['code'] === $this->customFieldCode) {
+            if ($field['code'] === $this->stripeUrlCustomFieldCode) {
                 return $field['value'];
             }
         }

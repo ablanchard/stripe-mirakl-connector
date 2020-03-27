@@ -2,14 +2,14 @@
 
 namespace App\Tests\Controller;
 
-use App\Factory\MiraklPatchShopFactory;
+use App\Factory\MiraklPatchStripeUrlShopFactory;
 use PHPUnit\Framework\TestCase;
 
-class MiraklPatchShopFactoryTest extends TestCase
+class MiraklPatchStripeUrlShopFactoryTest extends TestCase
 {
     public function testBuildPatch()
     {
-        $factory = new MiraklPatchShopFactory('stripe-key');
+        $factory = new MiraklPatchStripeUrlShopFactory('stripe-key');
         $patch = $factory
             ->setMiraklShopId(1234)
             ->setStripeUrl('https://test')

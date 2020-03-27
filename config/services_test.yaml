@@ -8,7 +8,7 @@ services:
       bind:
         $stripeClientSecret: "%app.stripe.client_secret%"
         $webhookSecret: "%app.stripe.webhook_secret%"
-        $customFieldCode: "%app.mirakl.stripe_custom_field_code%"
+        $stripeUrlCustomFieldCode: "%app.mirakl.stripe_url_custom_field_code%"
 
   App\Tests\StripeMockedHttpClient:
     class: App\Tests\StripeMockedHttpClient

@@ -3,7 +3,7 @@
 namespace App\Tests\MessageHandler;
 
 use App\Exception\InvalidStripeAccountException;
-use App\Factory\MiraklPatchShopFactory;
+use App\Factory\MiraklPatchStripeUrlShopFactory;
 use App\Handler\UpdateAccountLoginLinkHandler;
 use App\Handler\UpdateKYCStatusHandler;
 use App\Message\AccountUpdateMessage;
@@ -26,7 +26,7 @@ class UpdateKYCStatusHandlerTest extends TestCase
     private $stripeProxy;
 
     /**
-     * @var MiraklPatchShopFactory
+     * @var MiraklPatchStripeUrlShopFactory
      */
     private $patchFactory;
 
