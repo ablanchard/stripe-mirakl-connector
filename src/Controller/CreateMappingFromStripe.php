@@ -6,6 +6,8 @@ use App\Entity\MiraklStripeMapping;
 use App\Repository\MiraklStripeMappingRepository;
 use App\Repository\OnboardingAccountRepository;
 use App\Repository\StripeAccountRepository;
+use App\Utils\MiraklClient;
+use App\Factory\MiraklPatchStripeIdShopFactory;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Stripe\Exception\ApiErrorException;
@@ -57,16 +59,30 @@ class CreateMappingFromStripe extends AbstractController implements LoggerAwareI
      */
     private $onboardingAccountRepository;
 
+    /**
+     * @var MiraklClient
+     */
+    private $miraklClient;
+
+    /**
+     * @var MiraklPatchStripeIdShopFactory
+     */
+    private $miraklPatchStripeIdShopFactory;
+
     public function __construct(
         StripeAccountRepository $stripeAccountRepository,
         string $redirectOnboarding,
         MiraklStripeMappingRepository $miraklStripeMappingRepository,
-        OnboardingAccountRepository $onboardingAccountRepository
+        OnboardingAccountRepository $onboardingAccountRepository,
+        MiraklClient $miraklClient,
+        MiraklPatchStripeIdShopFactory $miraklPatchStripeIdShopFactory
     ) {
         $this->stripeAccountRepository = $stripeAccountRepository;
         $this->redirectOnboarding = $redirectOnboarding;
         $this->miraklStripeMappingRepository = $miraklStripeMappingRepository;
         $this->onboardingAccountRepository = $onboardingAccountRepository;
+        $this->miraklClient = $miraklClient;
+        $this->miraklPatchStripeIdShopFactory = $miraklPatchStripeIdShopFactory;
     }
 
     private function getRedirectResponse(array $error): RedirectResponse
@@ -157,6 +173,15 @@ class CreateMappingFromStripe extends AbstractController implements LoggerAwareI
             ]);
         }
 
+        // Update stripe-id in mirakl
+        $patchQuery = $this->miraklPatchStripeIdShopFactory
+            ->setMiraklShopId($miraklShopId)
+            ->setStripeId($stripeUserId)
+            ->buildPatch();
+
+        $this->miraklClient->patchShops(array($patchQuery));
+
+        // Save it in the connector
         $newMapping = new MiraklStripeMapping();
         $newMapping
             ->setMiraklShopId($miraklShopId)
@@ -166,10 +191,7 @@ class CreateMappingFromStripe extends AbstractController implements LoggerAwareI
             ->setPayinEnabled($stripeAccount->charges_enabled);
         $this->miraklStripeMappingRepository->persistAndFlush($newMapping);
 
-        // Update S07
-
-        
-
+        // Redirect 
         $queryParams = \http_build_query([
             'success' => 'true',
             'mirakl_shop_id' => $miraklShopId,

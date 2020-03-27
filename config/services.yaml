@@ -11,6 +11,7 @@ parameters:
   env(MAILER_DSN): "smtp://null"
   env(BASE_HOST): ""
   env(MIRAKL_STRIPE_URL_CUSTOM_FIELD_CODE): "stripe-url"
+  env(MIRAKL_STRIPE_ID_CUSTOM_FIELD_CODE): "stripe-id"
   env(ENABLES_AUTOMATIC_TRANSFER_CREATION): false
   env(REDIRECT_ONBOARDING): "%env(MIRAKL_HOST_NAME)%/mmp/shop/account/shop"
   env(STRIPE_PREFILL_ONBOARDING): false
@@ -28,6 +29,7 @@ parameters:
   app.mirakl.api_key: "%env(MIRAKL_API_KEY)%"
   app.mirakl.host_name: "%env(MIRAKL_HOST_NAME)%"
   app.mirakl.stripe_url_custom_field_code: "%env(MIRAKL_STRIPE_URL_CUSTOM_FIELD_CODE)%"
+  app.mirakl.stripe_id_custom_field_code: "%env(MIRAKL_STRIPE_ID_CUSTOM_FIELD_CODE)%"
   app.redirect.onboarding: "%env(REDIRECT_ONBOARDING)%"
   app.operator.notification_url: "%env(OPERATOR_NOTIFICATION_URL)%"
   app.mailer.technical: "%env(TECHNICAL_ALERT_EMAIL)%"
@@ -52,6 +54,7 @@ services:
       $miraklApiKey: "%app.mirakl.api_key%"
       $miraklHostName: "%app.mirakl.host_name%"
       $stripeUrlCustomFieldCode: "%app.mirakl.stripe_url_custom_field_code%"
+      $stripeIdCustomFieldCode: "%app.mirakl.stripe_id_custom_field_code%"
       $enablesAutoTransferCreation: "%app.stripe.enables_auto_transfer_creation%"
       $orderPaymentType: "%app.stripe.order_payment_type%"
       $redirectOnboarding: "%app.redirect.onboarding%"
